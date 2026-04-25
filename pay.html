@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בקשת תשלום</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #f4f3ef;
+    --surface: #ffffff;
+    --border: #e2e0d8;
+    --text: #1a1a18;
+    --text-muted: #7a7870;
+    --accent: #1a3a2a;
+    --accent-light: #e8f0eb;
+    --success: #2d6a4f;
+    --success-bg: #e8f5ee;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .hero {
+    background: var(--accent);
+    color: #fff;
+    padding: 32px 20px 40px;
+    text-align: center;
+  }
+  .biz-name { font-size: 13px; opacity: 0.7; margin-bottom: 4px; }
+  .pay-title { font-size: 15px; font-weight: 500; }
+  .pay-amount { font-size: 44px; font-weight: 600; margin: 14px 0 6px; letter-spacing: -1px; }
+  .pay-amount span { font-size: 22px; font-weight: 400; opacity: 0.8; }
+  .pay-desc { font-size: 14px; opacity: 0.75; }
+  .pay-customer { font-size: 12px; opacity: 0.55; margin-top: 4px; }
+  .pay-note { font-size: 12px; opacity: 0.6; margin-top: 8px; font-style: italic; }
+
+  .body-wrap { padding: 20px 16px 40px; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+  }
+
+  .method-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color .2s, background .15s;
+    text-decoration: none;
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .method-card:active { background: var(--accent-light); }
+  .method-card.selected { border-color: var(--accent); }
+
+  .method-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .method-text { flex: 1; }
+  .method-name { font-size: 15px; font-weight: 500; }
+  .method-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .method-arrow { font-size: 16px; color: var(--text-muted); }
+
+  .divider {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 18px 0 14px;
+    position: relative;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 38%;
+    height: 1px;
+    background: var(--border);
+  }
+  .divider::before { right: 0; }
+  .divider::after { left: 0; }
+
+  /* Bank details box */
+  .bank-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: none;
+  }
+  .bank-box.open { display: block; }
+  .bank-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .bank-row:last-child { border-bottom: none; }
+  .bank-label { color: var(--text-muted); font-size: 13px; }
+  .bank-value { font-weight: 500; }
+  .copy-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 14px; color: var(--text-muted); padding: 0 4px;
+    font-family: 'Heebo', sans-serif;
+  }
+  .bank-done-btn {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    padding: 11px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+  }
+
+  /* Success screen */
+  .success-wrap {
+    display: none;
+    text-align: center;
+    padding: 50px 20px;
+  }
+  .success-wrap.show { display: block; }
+  .main-content.hidden { display: none; }
+
+  .success-circle {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--success-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px;
+    margin: 0 auto 20px;
+  }
+  .success-title { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+  .success-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .success-amount { font-size: 32px; font-weight: 600; color: var(--success); margin: 16px 0 4px; }
+  .success-method { font-size: 13px; color: var(--text-muted); }
+
+  .not-found {
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .not-found-icon { font-size: 40px; margin-bottom: 12px; }
+  .not-found-title { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+  .not-found-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    right: 16px;
+    left: 16px;
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    z-index: 100;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all .3s ease;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+<div id="not-found" class="not-found" style="display:none">
+  <div class="not-found-icon">🔗</div>
+  <div class="not-found-title">הקישור אינו תקין</div>
+  <div class="not-found-sub">ייתכן שהקישור פג תוקף או שגוי.<br>אנא פנה לבית העסק לקבלת קישור חדש.</div>
+</div>
+
+<div id="main-wrap" style="display:none">
+  <div class="hero">
+    <div class="biz-name" id="h-bizname"></div>
+    <div class="pay-title">בקשת תשלום</div>
+    <div class="pay-amount"><span>₪</span><span id="h-amount"></span></div>
+    <div class="pay-desc" id="h-desc"></div>
+    <div class="pay-customer" id="h-customer"></div>
+    <div class="pay-note" id="h-note"></div>
+  </div>
+
+  <div class="body-wrap main-content" id="main-content">
+    <div class="section-title">בחר אופן תשלום</div>
+
+    <!-- Bit -->
+    <a class="method-card" id="btn-bit" href="#" onclick="payBit(event)">
+      <div class="method-icon" style="background:#e8f3ff">🔵</div>
+      <div class="method-text">
+        <div class="method-name">Bit</div>
+        <div class="method-desc">תשלום מיידי דרך אפליקציית Bit</div>
+      </div>
+      <span class="method-arrow">←</span>
+    </a>
+
+    <!-- PayBox -->
+    <a class="method-card" id="btn-paybox" href="#" onclick="payPaybox(event)">
+      <div class="method-icon" style="background:#fef3e8">🟠</div>
+      <div class="method-text">
+        <div class="method-name">PayBox</div>
+        <div class="method-desc">תשלום דרך אפליקציית PayBox</div>
+      </div>
+      <span class="method-arrow">←</span>
+    </a>
+
+    <div class="divider">או</div>
+
+    <!-- Bank Transfer -->
+    <div class="method-card" onclick="toggleBank()">
+      <div class="method-icon" style="background:#e8f5ee">🏦</div>
+      <div class="method-text">
+        <div class="method-name">העברה בנקאית</div>
+        <div class="method-desc">הצג פרטי חשבון בנק</div>
+      </div>
+      <span class="method-arrow" id="bank-arrow">←</span>
+    </div>
+
+    <div class="bank-box" id="bank-box">
+      <div class="bank-row">
+        <span class="bank-label">בנק</span>
+        <span class="bank-value" id="b-bank"></span>
+      </div>
+      <div class="bank-row">
+        <span class="bank-label">מספר חשבון</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="bank-value" id="b-account"></span>
+          <button class="copy-btn" onclick="copyText('b-account')">📋</button>
+        </div>
+      </div>
+      <div class="bank-row">
+        <span class="bank-label">שם בעל החשבון</span>
+        <span class="bank-value" id="b-owner"></span>
+      </div>
+      <div class="bank-row">
+        <span class="bank-label">סכום להעברה</span>
+        <span class="bank-value" id="b-amount" style="color:var(--success)"></span>
+      </div>
+      <button class="bank-done-btn" onclick="confirmBank()">✓ ביצעתי את ההעברה</button>
+    </div>
+  </div>
+
+  <!-- Success -->
+  <div class="success-wrap" id="success-wrap">
+    <div class="success-circle">✓</div>
+    <div class="success-title">תודה!</div>
+    <div class="success-amount" id="s-amount"></div>
+    <div class="success-method" id="s-method"></div>
+    <div class="success-sub" style="margin-top:16px">קבלה תישלח אליך בהודעה.<br>תודה ששילמת!</div>
+  </div>
+</div>
+
+<div class="footer">PayLink · תשלום מאובטח</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'paylink_data';
+const CONFIG_KEY = 'paylink_config';
+
+function getToken() {
+  return new URLSearchParams(window.location.search).get('token');
+}
+
+function loadData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; }
+}
+function saveData(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+
+function loadConfig() {
+  try { return JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; } catch { return {}; }
+}
+
+// In production, data comes from Make.com/Sheets via token lookup.
+// For demo/same-device: load from localStorage by token.
+// For cross-device: load via webhook/API using token.
+function findCustomer(token) {
+  const data = loadData();
+  return data.find(c => c.id === token) || null;
+}
+
+let currentCustomer = null;
+let cfg = {};
+
+function init() {
+  const token = getToken();
+  cfg = loadConfig();
+
+  if (!token) { show404(); return; }
+
+  // Try local storage first (same device / demo)
+  currentCustomer = findCustomer(token);
+
+  if (!currentCustomer) {
+    // In production: fetch from Make.com webhook with GET + token
+    // For now: show 404
+    show404(); return;
+  }
+
+  if (currentCustomer.status === 'paid') {
+    showSuccess(currentCustomer.method, currentCustomer.amount);
+    return;
+  }
+
+  document.getElementById('main-wrap').style.display = 'block';
+  document.getElementById('h-bizname').textContent = cfg.bizname || 'בית העסק';
+  document.getElementById('h-amount').textContent = Number(currentCustomer.amount).toLocaleString();
+  document.getElementById('h-desc').textContent = currentCustomer.desc;
+  document.getElementById('h-customer').textContent = 'עבור: ' + currentCustomer.name;
+  if (currentCustomer.note) document.getElementById('h-note').textContent = currentCustomer.note;
+
+  // Bank details
+  document.getElementById('b-bank').textContent = cfg.bankName || '—';
+  document.getElementById('b-account').textContent = cfg.bankAccount || '—';
+  document.getElementById('b-owner').textContent = cfg.bankOwner || '—';
+  document.getElementById('b-amount').textContent = '₪' + Number(currentCustomer.amount).toLocaleString();
+}
+
+function show404() {
+  document.getElementById('not-found').style.display = 'block';
+}
+
+function payBit(e) {
+  e.preventDefault();
+  if (!cfg.bit) { showToast('מספר Bit לא הוגדר'); return; }
+  markPaid('bit');
+  // Open Bit app deep link
+  window.location.href = 'https://bit.ly/bit-payment?phone=' + cfg.bit + '&amount=' + currentCustomer.amount;
+}
+
+function payPaybox(e) {
+  e.preventDefault();
+  if (!cfg.paybox) { showToast('מספר PayBox לא הוגדר'); return; }
+  markPaid('paybox');
+  // Open PayBox app deep link
+  window.location.href = 'https://payboxapp.page.link/?phone=' + cfg.paybox + '&amount=' + currentCustomer.amount;
+}
+
+function toggleBank() {
+  const box = document.getElementById('bank-box');
+  const arrow = document.getElementById('bank-arrow');
+  const open = box.classList.toggle('open');
+  arrow.textContent = open ? '↑' : '←';
+}
+
+function confirmBank() {
+  markPaid('bank');
+}
+
+function markPaid(method) {
+  const methodLabels = { bit: 'Bit', paybox: 'PayBox', bank: 'העברה בנקאית' };
+
+  // Update local storage
+  const data = loadData();
+  const idx = data.findIndex(c => c.id === currentCustomer.id);
+  if (idx !== -1) {
+    data[idx].status = 'paid';
+    data[idx].method = method;
+    data[idx].paidAt = new Date().toISOString();
+    saveData(data);
+  }
+
+  // Notify Make.com
+  if (cfg.webhook) {
+    fetch(cfg.webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'payment_completed',
+        token: currentCustomer.id,
+        name: currentCustomer.name,
+        phone: currentCustomer.phone,
+        email: currentCustomer.email,
+        amount: currentCustomer.amount,
+        desc: currentCustomer.desc,
+        method,
+        methodLabel: methodLabels[method],
+        paidAt: new Date().toISOString()
+      })
+    }).catch(() => {});
+  }
+
+  showSuccess(method, currentCustomer.amount);
+}
+
+function showSuccess(method, amount) {
+  const methodLabels = { bit: 'Bit', paybox: 'PayBox', bank: 'העברה בנקאית' };
+  document.getElementById('main-wrap').style.display = 'block';
+  document.getElementById('main-content').style.display = 'none';
+  document.getElementById('success-wrap').classList.add('show');
+  document.getElementById('s-amount').textContent = '₪' + Number(amount).toLocaleString();
+  document.getElementById('s-method').textContent = 'שולם דרך ' + (methodLabels[method] || method);
+}
+
+function copyText(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('✓ הועתק')).catch(() => {});
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+init();
+</script>
+</body>
+</html>

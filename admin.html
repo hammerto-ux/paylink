@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PayLink — ניהול</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #f4f3ef;
+    --surface: #ffffff;
+    --border: #e2e0d8;
+    --text: #1a1a18;
+    --text-muted: #7a7870;
+    --accent: #1a3a2a;
+    --accent-light: #e8f0eb;
+    --success: #2d6a4f;
+    --success-bg: #e8f5ee;
+    --warning: #92400e;
+    --warning-bg: #fef3c7;
+    --danger: #991b1b;
+    --danger-bg: #fee2e2;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  header {
+    background: var(--accent);
+    color: #fff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  header h1 { font-size: 16px; font-weight: 600; letter-spacing: 0.3px; }
+  header span { font-size: 11px; opacity: 0.6; background: rgba(255,255,255,0.15); padding: 3px 8px; border-radius: 20px; }
+
+  .tabs {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    gap: 4px;
+    position: sticky;
+    top: 49px;
+    z-index: 9;
+  }
+  .tab {
+    padding: 12px 14px;
+    font-size: 13px;
+    font-family: 'Heebo', sans-serif;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color .2s, border-color .2s;
+  }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
+
+  .pane { display: none; padding: 16px; }
+  .pane.active { display: block; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 14px;
+  }
+
+  label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; margin-top: 12px; }
+  label:first-of-type { margin-top: 0; }
+  input, textarea {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: border-color .2s;
+  }
+  input:focus, textarea:focus { outline: none; border-color: var(--accent); background: #fff; }
+
+  .amount-wrap { display: flex; align-items: center; gap: 8px; }
+  .amount-wrap input { flex: 1; }
+  .currency { font-size: 18px; font-weight: 500; color: var(--text-muted); padding-bottom: 1px; }
+
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: opacity .15s, transform .1s;
+  }
+  .btn:active { transform: scale(0.98); opacity: 0.9; }
+  .btn-primary { background: var(--accent); color: #fff; margin-top: 16px; }
+  .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); margin-top: 8px; }
+
+  .hint { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px; }
+
+  /* customers list */
+  .customer-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .customer-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .customer-item:first-child { padding-top: 0; }
+
+  .avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .cust-info { flex: 1; min-width: 0; }
+  .cust-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cust-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .cust-right { text-align: left; flex-shrink: 0; }
+  .cust-amount { font-size: 14px; font-weight: 600; color: var(--text); }
+
+  .pill {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .pill-sent { background: var(--warning-bg); color: var(--warning); }
+  .pill-paid { background: var(--success-bg); color: var(--success); }
+  .pill-pending { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+
+  /* report */
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    box-shadow: var(--shadow);
+  }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+  .stat-val { font-size: 22px; font-weight: 600; color: var(--text); }
+  .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  .method-row { margin-bottom: 12px; }
+  .method-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .method-top strong { color: var(--text); }
+  .bar-track { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; border: 1px solid var(--border); }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width .5s ease; }
+
+  .txn-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .txn-item:last-child { border-bottom: none; }
+  .txn-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .txn-info { flex: 1; }
+  .txn-name { font-size: 13px; font-weight: 500; }
+  .txn-method { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .txn-amount { font-size: 14px; font-weight: 600; color: var(--success); }
+
+  /* config */
+  .config-note {
+    background: var(--accent-light);
+    border: 1px solid #b7d4c0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    right: 16px;
+    left: 16px;
+    background: var(--accent);
+    color: #fff;
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    z-index: 100;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all .3s ease;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  .empty { text-align: center; padding: 30px 0; color: var(--text-muted); font-size: 13px; }
+  .empty-icon { font-size: 32px; margin-bottom: 8px; }
+
+  .preview-link {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    word-break: break-all;
+    margin-top: 10px;
+    display: none;
+  }
+  .preview-link a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>💳 PayLink</h1>
+  <span>ממשק ניהול</span>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('send',this)">שליחה חדשה</button>
+  <button class="tab" onclick="switchTab('list',this)">לקוחות</button>
+  <button class="tab" onclick="switchTab('report',this)">דוח</button>
+  <button class="tab" onclick="switchTab('config',this)">הגדרות</button>
+</div>
+
+<!-- TAB: שליחה -->
+<div class="pane active" id="pane-send">
+  <div class="card">
+    <div class="card-title">פרטי לקוח</div>
+    <label>שם מלא *</label>
+    <input type="text" id="f-name" placeholder="ישראל ישראלי">
+    <label>טלפון נייד *</label>
+    <input type="tel" id="f-phone" placeholder="0501234567" dir="ltr">
+    <label>אימייל (לא חובה)</label>
+    <input type="email" id="f-email" placeholder="email@example.com" dir="ltr">
+  </div>
+
+  <div class="card">
+    <div class="card-title">פרטי תשלום</div>
+    <label>תיאור השירות *</label>
+    <input type="text" id="f-desc" placeholder="טיפול / ייעוץ / מוצר...">
+    <label>סכום לתשלום *</label>
+    <div class="amount-wrap">
+      <span class="currency">₪</span>
+      <input type="number" id="f-amount" placeholder="0" min="1" dir="ltr">
+    </div>
+    <label>הערה ללקוח (לא חובה)</label>
+    <input type="text" id="f-note" placeholder="לדוגמה: תשלום עבור פגישה מיום...">
+  </div>
+
+  <button class="btn btn-primary" onclick="sendRequest()">📤 שלח בקשת תשלום ב-SMS</button>
+  <p class="hint">הלקוח יקבל SMS עם קישור לדף תשלום מאובטח</p>
+
+  <div class="preview-link" id="preview-link">
+    <strong>קישור לבדיקה:</strong><br>
+    <a id="preview-anchor" href="#" target="_blank"></a>
+  </div>
+</div>
+
+<!-- TAB: לקוחות -->
+<div class="pane" id="pane-list">
+  <div class="card" id="customers-card">
+    <div class="card-title">כל הלקוחות</div>
+    <div id="customers-list"></div>
+  </div>
+</div>
+
+<!-- TAB: דוח -->
+<div class="pane" id="pane-report">
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">סה"כ שולם</div>
+      <div class="stat-val" id="r-total">₪0</div>
+      <div class="stat-sub" id="r-txn-count">0 עסקאות</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">ממתינים לתשלום</div>
+      <div class="stat-val" id="r-pending">0</div>
+      <div class="stat-sub" id="r-pending-sum">סה"כ ₪0</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">שיטות תשלום</div>
+    <div id="methods-chart"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">עסקאות שהושלמו</div>
+    <div id="txn-list"></div>
+  </div>
+</div>
+
+<!-- TAB: הגדרות -->
+<div class="pane" id="pane-config">
+  <div class="config-note">
+    הגדרות אלו נשמרות בדפדפן בלבד. בסביבת ייצור יש לשמור ב-Make.com או בקובץ config נפרד.
+  </div>
+
+  <div class="card">
+    <div class="card-title">Make.com Webhook</div>
+    <label>כתובת Webhook לשליחת SMS</label>
+    <input type="url" id="cfg-webhook" placeholder="https://hook.eu2.make.com/..." dir="ltr">
+    <p class="hint" style="text-align:right;margin-top:6px">זוהי הכתובת שתקבל את פרטי הלקוח ותשלח SMS</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">פרטי Bit ו-PayBox</div>
+    <label>מספר טלפון Bit (עסקי)</label>
+    <input type="tel" id="cfg-bit" placeholder="0501234567" dir="ltr">
+    <label>מספר טלפון PayBox (עסקי)</label>
+    <input type="tel" id="cfg-paybox" placeholder="0501234567" dir="ltr">
+    <label>שם העסק (יופיע בדף התשלום)</label>
+    <input type="text" id="cfg-bizname" placeholder="המרפאה / הקליניקה שלי">
+    <label>כתובת URL של pay.html (GitHub Pages)</label>
+    <input type="url" id="cfg-payurl" placeholder="https://yourusername.github.io/paylink/pay.html" dir="ltr">
+  </div>
+
+  <div class="card">
+    <div class="card-title">פרטי העברה בנקאית</div>
+    <label>שם בנק</label>
+    <input type="text" id="cfg-bank-name" placeholder="לאומי / הפועלים / דיסקונט...">
+    <label>מספר חשבון</label>
+    <input type="text" id="cfg-bank-account" placeholder="12-345-678901" dir="ltr">
+    <label>שם בעל החשבון</label>
+    <input type="text" id="cfg-bank-owner" placeholder="שם מלא">
+  </div>
+
+  <button class="btn btn-primary" onclick="saveConfig()">💾 שמור הגדרות</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'paylink_data';
+const CONFIG_KEY = 'paylink_config';
+
+function loadData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; }
+}
+function saveData(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+
+function loadConfig() {
+  try { return JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; } catch { return {}; }
+}
+function saveConfig() {
+  const cfg = {
+    webhook: document.getElementById('cfg-webhook').value.trim(),
+    bit: document.getElementById('cfg-bit').value.trim(),
+    paybox: document.getElementById('cfg-paybox').value.trim(),
+    bizname: document.getElementById('cfg-bizname').value.trim(),
+    payurl: document.getElementById('cfg-payurl').value.trim(),
+    bankName: document.getElementById('cfg-bank-name').value.trim(),
+    bankAccount: document.getElementById('cfg-bank-account').value.trim(),
+    bankOwner: document.getElementById('cfg-bank-owner').value.trim(),
+  };
+  localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
+  showToast('✓ ההגדרות נשמרו');
+}
+
+function fillConfigForm() {
+  const cfg = loadConfig();
+  document.getElementById('cfg-webhook').value = cfg.webhook || '';
+  document.getElementById('cfg-bit').value = cfg.bit || '';
+  document.getElementById('cfg-paybox').value = cfg.paybox || '';
+  document.getElementById('cfg-bizname').value = cfg.bizname || '';
+  document.getElementById('cfg-payurl').value = cfg.payurl || '';
+  document.getElementById('cfg-bank-name').value = cfg.bankName || '';
+  document.getElementById('cfg-bank-account').value = cfg.bankAccount || '';
+  document.getElementById('cfg-bank-owner').value = cfg.bankOwner || '';
+}
+
+function genToken() {
+  return Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+}
+
+function getInitials(name) {
+  return name.trim().split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+}
+
+function statusPill(status) {
+  if (status === 'paid') return '<span class="pill pill-paid">שולם ✓</span>';
+  if (status === 'sent') return '<span class="pill pill-sent">נשלח</span>';
+  return '<span class="pill pill-pending">ממתין</span>';
+}
+
+function switchTab(id, el) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('pane-' + id).classList.add('active');
+  el.classList.add('active');
+  if (id === 'list') renderList();
+  if (id === 'report') renderReport();
+  if (id === 'config') fillConfigForm();
+}
+
+async function sendRequest() {
+  const name = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim().replace(/[-\s]/g,'');
+  const email = document.getElementById('f-email').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
+  const amount = parseFloat(document.getElementById('f-amount').value);
+  const note = document.getElementById('f-note').value.trim();
+
+  if (!name || !phone || !desc || !amount || amount <= 0) {
+    showToast('⚠️ נא למלא שם, טלפון, תיאור וסכום'); return;
+  }
+
+  const cfg = loadConfig();
+  if (!cfg.payurl) {
+    showToast('⚠️ חסרה כתובת pay.html בהגדרות'); return;
+  }
+
+  const token = genToken();
+  const payUrl = cfg.payurl + '?token=' + token;
+  const customer = {
+    id: token, name, phone, email, desc, amount, note,
+    status: 'sent', method: null,
+    date: new Date().toLocaleDateString('he-IL'),
+    ts: Date.now()
+  };
+
+  const data = loadData();
+  data.unshift(customer);
+  saveData(data);
+
+  // show preview link
+  const anchor = document.getElementById('preview-anchor');
+  anchor.href = payUrl;
+  anchor.textContent = payUrl;
+  document.getElementById('preview-link').style.display = 'block';
+
+  // send webhook to Make.com
+  if (cfg.webhook) {
+    const payload = {
+      token, name, phone, email, desc, amount, note, payUrl,
+      bit: cfg.bit, paybox: cfg.paybox, bizname: cfg.bizname,
+      bankName: cfg.bankName, bankAccount: cfg.bankAccount, bankOwner: cfg.bankOwner
+    };
+    try {
+      await fetch(cfg.webhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch(e) {
+      console.warn('Webhook failed:', e);
+    }
+  }
+
+  showToast('✓ בקשת תשלום נשלחה ל-' + phone);
+  ['f-name','f-phone','f-email','f-desc','f-amount','f-note'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+function renderList() {
+  const data = loadData();
+  const el = document.getElementById('customers-list');
+  if (!data.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📋</div>עדיין אין לקוחות</div>';
+    return;
+  }
+  el.innerHTML = data.map(c => `
+    <div class="customer-item">
+      <div class="avatar">${getInitials(c.name)}</div>
+      <div class="cust-info">
+        <div class="cust-name">${c.name}</div>
+        <div class="cust-sub">${c.phone} · ${c.desc}</div>
+      </div>
+      <div class="cust-right">
+        <div class="cust-amount">₪${Number(c.amount).toLocaleString()}</div>
+        ${statusPill(c.status)}
+      </div>
+    </div>`).join('');
+}
+
+function renderReport() {
+  const data = loadData();
+  const paid = data.filter(c => c.status === 'paid');
+  const pending = data.filter(c => c.status !== 'paid');
+  const total = paid.reduce((s,c) => s + Number(c.amount), 0);
+  const pendingSum = pending.reduce((s,c) => s + Number(c.amount), 0);
+
+  document.getElementById('r-total').textContent = '₪' + total.toLocaleString();
+  document.getElementById('r-txn-count').textContent = paid.length + ' עסקאות';
+  document.getElementById('r-pending').textContent = pending.length;
+  document.getElementById('r-pending-sum').textContent = 'סה"כ ₪' + pendingSum.toLocaleString();
+
+  const methods = { bit: { label: 'Bit', icon: '🔵', color: '#0057b8' }, paybox: { label: 'PayBox', icon: '🟠', color: '#e67e22' }, bank: { label: 'העברה בנקאית', icon: '🏦', color: '#2d6a4f' } };
+  const counts = { bit: 0, paybox: 0, bank: 0 };
+  const amounts = { bit: 0, paybox: 0, bank: 0 };
+  paid.forEach(c => { if (c.method && counts[c.method] !== undefined) { counts[c.method]++; amounts[c.method] += Number(c.amount); } });
+
+  const chartEl = document.getElementById('methods-chart');
+  if (!paid.length) { chartEl.innerHTML = '<div class="empty" style="padding:16px 0"><div class="empty-icon">📊</div>אין נתונים עדיין</div>'; }
+  else {
+    chartEl.innerHTML = Object.entries(methods).map(([k,v]) => {
+      const pct = total > 0 ? Math.round(amounts[k] / total * 100) : 0;
+      return `<div class="method-row">
+        <div class="method-top"><span>${v.icon} <strong>${v.label}</strong></span><span>₪${amounts[k].toLocaleString()} · ${pct}%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${v.color}"></div></div>
+      </div>`;
+    }).join('');
+  }
+
+  const txEl = document.getElementById('txn-list');
+  if (!paid.length) { txEl.innerHTML = '<div class="empty" style="padding:16px 0">אין עסקאות שהושלמו</div>'; return; }
+  const methodIcons = { bit:'🔵', paybox:'🟠', bank:'🏦' };
+  const methodLabels = { bit:'Bit', paybox:'PayBox', bank:'העברה בנקאית' };
+  const methodColors = { bit:'#e8f3ff', paybox:'#fef3e8', bank:'#e8f5ee' };
+  txEl.innerHTML = paid.map(c => `
+    <div class="txn-item">
+      <div class="txn-icon" style="background:${methodColors[c.method]||'#f4f3ef'}">${methodIcons[c.method]||'💳'}</div>
+      <div class="txn-info">
+        <div class="txn-name">${c.name}</div>
+        <div class="txn-method">${methodLabels[c.method]||''} · ${c.date}</div>
+      </div>
+      <div class="txn-amount">₪${Number(c.amount).toLocaleString()}</div>
+    </div>`).join('');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// poll for payment updates from pay.html via localStorage cross-tab events
+window.addEventListener('storage', e => {
+  if (e.key === STORAGE_KEY) {
+    const active = document.querySelector('.tab.active');
+    if (active && active.textContent.includes('לקוח')) renderList();
+    if (active && active.textContent.includes('דוח')) renderReport();
+  }
+});
+</script>
+</body>
+</html>
