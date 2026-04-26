@@ -510,7 +510,9 @@ window.sendRequest = async function() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, phone, email, desc, amount, note, payUrl, token,
           bit: cfg.bit, paybox: cfg.paybox, bizname: cfg.bizname,
-          bankName: cfg.bankName, bankAccount: cfg.bankAccount, bankOwner: cfg.bankOwner })
+          bankName: cfg.bankName, bankAccount: cfg.bankAccount, bankOwner: cfg.bankOwner,
+          userId: currentUser.uid, userName: currentProfile.name || currentUser.email,
+          date: new Date().toLocaleDateString("he-IL") })
       }).catch(() => {});
     }
 
