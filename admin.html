@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PayLink — ניהול</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600&display=swap');
-
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap');
   :root {
     --bg: #f4f3ef;
     --surface: #ffffff;
     --border: #e2e0d8;
     --text: #1a1a18;
-    --text-muted: #7a7870;
+    --muted: #7a7870;
     --accent: #1a3a2a;
     --accent-light: #e8f0eb;
     --success: #2d6a4f;
@@ -24,16 +23,8 @@
     --radius: 10px;
     --shadow: 0 1px 3px rgba(0,0,0,0.07);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Heebo', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 14px;
-  }
+  body { font-family: 'Heebo', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; }
 
   /* LOGIN */
   #login-screen {
@@ -44,218 +35,199 @@
     justify-content: center;
     padding: 24px;
   }
-  .login-logo { font-size: 40px; margin-bottom: 8px; }
-  .login-title { font-size: 22px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
-  .login-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
   .login-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 24px; width: 100%;
-    max-width: 360px; box-shadow: var(--shadow);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 24px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: var(--shadow);
   }
-  .login-card label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; margin-top: 14px; }
-  .login-card label:first-of-type { margin-top: 0; }
-  .login-card input {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border);
-    border-radius: 8px; font-size: 14px; font-family: 'Heebo', sans-serif;
+  .login-logo { text-align: center; margin-bottom: 24px; }
+  .login-logo-icon { font-size: 36px; }
+  .login-logo-name { font-size: 20px; font-weight: 600; color: var(--accent); margin-top: 6px; }
+  .login-logo-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .login-label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 5px; margin-top: 14px; }
+  .login-label:first-of-type { margin-top: 0; }
+  .login-input {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 14px; font-family: 'Heebo', sans-serif;
     background: var(--bg); color: var(--text);
   }
-  .login-card input:focus { outline: none; border-color: var(--accent); background: #fff; }
-  .login-error {
-    font-size: 12px; color: var(--danger); background: var(--danger-bg);
-    border-radius: 6px; padding: 8px 10px; margin-top: 10px; display: none;
+  .login-input:focus { outline: none; border-color: var(--accent); background: #fff; }
+  .login-btn {
+    width: 100%; padding: 12px; margin-top: 20px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 600; font-family: 'Heebo', sans-serif;
+    cursor: pointer; transition: opacity .15s;
   }
-  .btn-login {
-    width: 100%; margin-top: 16px; padding: 12px; background: var(--accent);
-    color: #fff; border: none; border-radius: 8px; font-size: 14px;
-    font-weight: 600; font-family: 'Heebo', sans-serif; cursor: pointer;
-  }
+  .login-btn:disabled { opacity: 0.6; cursor: default; }
+  .login-error { font-size: 12px; color: var(--danger); text-align: center; margin-top: 10px; min-height: 18px; }
 
-  /* APP */
+  /* MAIN APP */
   #app-screen { display: none; }
-
   header {
-    background: var(--accent); color: #fff; padding: 13px 16px;
+    background: var(--accent); color: #fff;
+    padding: 13px 16px;
     display: flex; align-items: center; justify-content: space-between;
     position: sticky; top: 0; z-index: 10;
   }
-  .header-left { display: flex; flex-direction: column; }
-  .header-title { font-size: 15px; font-weight: 600; }
-  .header-user { font-size: 11px; opacity: 0.65; margin-top: 1px; }
-  .header-right { display: flex; align-items: center; gap: 8px; }
-  .super-badge { font-size: 10px; background: #f59e0b; color: #1a1a18; padding: 2px 7px; border-radius: 20px; font-weight: 600; }
-  .btn-logout {
-    font-size: 12px; background: rgba(255,255,255,0.15); color: #fff;
-    border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer;
-    font-family: 'Heebo', sans-serif;
-  }
+  .header-left { display: flex; align-items: center; gap: 8px; }
+  header h1 { font-size: 15px; font-weight: 600; }
+  .user-badge { font-size: 11px; opacity: 0.65; background: rgba(255,255,255,0.15); padding: 3px 8px; border-radius: 20px; }
+  .logout-btn { font-size: 12px; color: rgba(255,255,255,0.7); background: none; border: none; cursor: pointer; font-family: 'Heebo', sans-serif; padding: 4px 0; }
 
   .tabs {
-    display: flex; background: var(--surface); border-bottom: 1px solid var(--border);
-    padding: 0 16px; gap: 4px; position: sticky; top: 49px; z-index: 9; overflow-x: auto;
+    display: flex; background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 12px; gap: 2px;
+    position: sticky; top: 49px; z-index: 9;
+    overflow-x: auto;
   }
   .tab {
-    padding: 11px 12px; font-size: 13px; font-family: 'Heebo', sans-serif;
-    border: none; background: none; color: var(--text-muted); cursor: pointer;
-    border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap;
-    transition: color .2s, border-color .2s;
+    padding: 11px 12px; font-size: 13px;
+    font-family: 'Heebo', sans-serif; border: none;
+    background: none; color: var(--muted); cursor: pointer;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    white-space: nowrap; transition: color .2s, border-color .2s;
   }
   .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
-  .tab.super-tab { color: #b45309; }
-  .tab.super-tab.active { color: #92400e; border-bottom-color: #f59e0b; }
 
-  .pane { display: none; padding: 16px; }
+  .pane { display: none; padding: 16px; padding-bottom: 32px; }
   .pane.active { display: block; }
 
   .card {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow);
+    border-radius: var(--radius); padding: 16px;
+    margin-bottom: 12px; box-shadow: var(--shadow);
   }
-  .card-title {
-    font-size: 11px; font-weight: 600; color: var(--text-muted);
-    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;
-  }
-
-  label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; margin-top: 12px; }
+  .card-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px; }
+  label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 5px; margin-top: 12px; }
   label:first-of-type { margin-top: 0; }
   input, select {
-    width: 100%; padding: 9px 11px; border: 1px solid var(--border);
-    border-radius: 8px; font-size: 14px; font-family: 'Heebo', sans-serif;
+    width: 100%; padding: 9px 11px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 14px; font-family: 'Heebo', sans-serif;
     background: var(--bg); color: var(--text); transition: border-color .2s;
   }
   input:focus, select:focus { outline: none; border-color: var(--accent); background: #fff; }
-
   .amount-wrap { display: flex; align-items: center; gap: 8px; }
-  .amount-wrap input { flex: 1; }
-  .currency { font-size: 18px; font-weight: 500; color: var(--text-muted); }
-
+  .currency { font-size: 18px; font-weight: 500; color: var(--muted); }
   .btn {
-    display: block; width: 100%; padding: 12px; border-radius: 8px; font-size: 14px;
-    font-weight: 600; font-family: 'Heebo', sans-serif; cursor: pointer; border: none;
-    transition: opacity .15s, transform .1s;
+    display: block; width: 100%; padding: 12px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; font-family: 'Heebo', sans-serif;
+    cursor: pointer; border: none; transition: opacity .15s, transform .1s;
   }
-  .btn:active { transform: scale(0.98); opacity: 0.9; }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.6; cursor: default; }
   .btn-primary { background: var(--accent); color: #fff; margin-top: 16px; }
-  .hint { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px; }
+  .hint { font-size: 11px; color: var(--muted); text-align: center; margin-top: 8px; }
+  .preview-link { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 12px; color: var(--muted); word-break: break-all; margin-top: 10px; display: none; }
+  .preview-link a { color: var(--accent); }
 
-  .customer-item {
-    display: flex; align-items: center; gap: 11px;
-    padding: 11px 0; border-bottom: 1px solid var(--border);
-  }
+  /* customers */
+  .customer-item { display: flex; align-items: center; gap: 11px; padding: 11px 0; border-bottom: 1px solid var(--border); }
   .customer-item:last-child { border-bottom: none; padding-bottom: 0; }
   .customer-item:first-child { padding-top: 0; }
-  .avatar {
-    width: 38px; height: 38px; border-radius: 50%; background: var(--accent-light);
-    color: var(--accent); display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 600; flex-shrink: 0;
-  }
+  .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--accent-light); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
   .cust-info { flex: 1; min-width: 0; }
   .cust-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .cust-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .cust-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
   .cust-right { text-align: left; flex-shrink: 0; }
   .cust-amount { font-size: 14px; font-weight: 600; }
   .pill { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; margin-top: 4px; }
   .pill-sent { background: var(--warning-bg); color: var(--warning); }
   .pill-paid { background: var(--success-bg); color: var(--success); }
-  .pill-pending { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+  .pill-pending { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
 
+  /* report */
   .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-  .stat-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow);
-  }
-  .stat-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
+  .stat-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
   .stat-val { font-size: 22px; font-weight: 600; }
-  .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
-
+  .stat-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
   .method-row { margin-bottom: 12px; }
-  .method-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .method-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
   .method-top strong { color: var(--text); }
   .bar-track { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; border: 1px solid var(--border); }
   .bar-fill { height: 100%; border-radius: 3px; transition: width .5s ease; }
-
   .txn-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .txn-item:last-child { border-bottom: none; }
   .txn-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
   .txn-info { flex: 1; }
   .txn-name { font-size: 13px; font-weight: 500; }
-  .txn-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
-  .txn-amount { font-size: 13px; font-weight: 600; color: var(--success); white-space: nowrap; }
-
-  .filter-row { display: flex; gap: 8px; margin-bottom: 0; }
+  .txn-detail { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .txn-amount { font-size: 14px; font-weight: 600; color: var(--success); }
+  .filter-row { display: flex; gap: 8px; margin-bottom: 12px; }
   .filter-row select { flex: 1; }
 
-  .user-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-  .user-row:last-child { border-bottom: none; }
-  .user-avatar {
-    width: 34px; height: 34px; border-radius: 50%; background: var(--accent-light);
-    color: var(--accent); display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 600; flex-shrink: 0;
-  }
-  .user-info { flex: 1; }
-  .user-name-text { font-size: 14px; font-weight: 500; }
-  .user-role-text { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
-  .btn-sm {
-    font-size: 11px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border);
-    background: var(--bg); color: var(--danger); cursor: pointer; font-family: 'Heebo', sans-serif;
-  }
+  /* users management */
+  .user-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .user-item:last-child { border-bottom: none; }
+  .user-role { font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; }
+  .role-admin { background: #fde8e8; color: #991b1b; }
+  .role-user { background: var(--accent-light); color: var(--accent); }
+  .del-btn { background: none; border: none; font-size: 16px; cursor: pointer; color: var(--muted); padding: 4px; }
 
-  .config-note {
-    background: var(--accent-light); border: 1px solid #b7d4c0; border-radius: 8px;
-    padding: 12px 14px; font-size: 12px; color: var(--accent); margin-bottom: 14px; line-height: 1.6;
-  }
+  /* config */
+  .config-note { background: var(--accent-light); border: 1px solid #b7d4c0; border-radius: 8px; padding: 12px 14px; font-size: 12px; color: var(--accent); margin-bottom: 14px; line-height: 1.6; }
 
-  .toast {
-    position: fixed; bottom: 20px; right: 16px; left: 16px; background: var(--accent);
-    color: #fff; padding: 13px 16px; border-radius: 10px; font-size: 13px; font-weight: 500;
-    text-align: center; z-index: 100; transform: translateY(80px); opacity: 0; transition: all .3s ease;
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
+  /* loading */
+  .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-left: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  .empty { text-align: center; padding: 30px 0; color: var(--text-muted); font-size: 13px; }
+  .empty { text-align: center; padding: 30px 0; color: var(--muted); font-size: 13px; }
   .empty-icon { font-size: 32px; margin-bottom: 8px; }
 
-  .preview-link {
-    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-    padding: 10px 12px; font-size: 12px; color: var(--text-muted); word-break: break-all;
-    margin-top: 10px; display: none;
-  }
-  .preview-link a { color: var(--accent); }
+  .toast { position: fixed; bottom: 20px; right: 16px; left: 16px; background: var(--accent); color: #fff; padding: 13px 16px; border-radius: 10px; font-size: 13px; font-weight: 500; text-align: center; z-index: 100; transform: translateY(80px); opacity: 0; transition: all .3s ease; pointer-events: none; }
+  .toast.show { transform: translateY(0); opacity: 1; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- LOGIN SCREEN -->
 <div id="login-screen">
-  <div class="login-logo">💳</div>
-  <div class="login-title">PayLink</div>
-  <div class="login-sub">מערכת ניהול תשלומים</div>
   <div class="login-card">
-    <label>שם משתמש</label>
-    <input type="text" id="l-username" placeholder="username" dir="ltr" autocomplete="username">
-    <label>סיסמה</label>
-    <input type="password" id="l-password" placeholder="••••••" dir="ltr" autocomplete="current-password">
-    <div class="login-error" id="login-error">שם משתמש או סיסמה שגויים</div>
-    <button class="btn-login" onclick="doLogin()">כניסה</button>
+    <div class="login-logo">
+      <div class="login-logo-icon">💳</div>
+      <div class="login-logo-name">PayLink</div>
+      <div class="login-logo-sub">מערכת ניהול תשלומים</div>
+    </div>
+    <label class="login-label">אימייל</label>
+    <input class="login-input" type="email" id="l-email" placeholder="user@example.com" dir="ltr" autocomplete="email">
+    <label class="login-label">סיסמה</label>
+    <input class="login-input" type="password" id="l-pass" placeholder="••••••••" dir="ltr" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" id="login-btn" onclick="doLogin()">כניסה</button>
+    <div class="login-error" id="login-error"></div>
   </div>
 </div>
 
-<!-- APP -->
+<!-- MAIN APP -->
 <div id="app-screen">
   <header>
     <div class="header-left">
-      <div class="header-title">💳 PayLink</div>
-      <div class="header-user" id="header-user"></div>
+      <span>💳</span>
+      <h1>PayLink</h1>
     </div>
-    <div class="header-right">
-      <span class="super-badge" id="super-badge" style="display:none">הנהלת חשבונות</span>
-      <button class="btn-logout" onclick="doLogout()">יציאה</button>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="user-badge" id="user-badge"></span>
+      <button class="logout-btn" onclick="doLogout()">יציאה</button>
     </div>
   </header>
 
-  <div class="tabs" id="main-tabs"></div>
+  <div class="tabs" id="main-tabs">
+    <button class="tab active" onclick="switchTab('send',this)">שליחה</button>
+    <button class="tab" onclick="switchTab('list',this)">לקוחות</button>
+    <button class="tab" onclick="switchTab('report',this)">דוח</button>
+    <button class="tab tab-admin" onclick="switchTab('users',this)" style="display:none">משתמשים</button>
+    <button class="tab" onclick="switchTab('config',this)">הגדרות</button>
+  </div>
 
-  <!-- send -->
-  <div class="pane" id="pane-send">
+  <!-- SEND -->
+  <div class="pane active" id="pane-send">
     <div class="card">
       <div class="card-title">פרטי לקוח</div>
       <label>שם מלא *</label>
@@ -277,7 +249,7 @@
       <label>הערה ללקוח (לא חובה)</label>
       <input type="text" id="f-note" placeholder="לדוגמה: תשלום עבור פגישה מיום...">
     </div>
-    <button class="btn btn-primary" onclick="sendRequest()">📤 שלח בקשת תשלום ב-SMS</button>
+    <button class="btn btn-primary" id="send-btn" onclick="sendRequest()">📤 שלח בקשת תשלום</button>
     <p class="hint">הלקוח יקבל SMS עם קישור לדף תשלום</p>
     <div class="preview-link" id="preview-link">
       <strong>קישור לבדיקה:</strong><br>
@@ -285,86 +257,89 @@
     </div>
   </div>
 
-  <!-- my list -->
+  <!-- LIST -->
   <div class="pane" id="pane-list">
+    <div class="filter-row" id="list-filter-row">
+      <select id="list-filter-user" onchange="renderList()" style="display:none">
+        <option value="">כל המשתמשים</option>
+      </select>
+      <select id="list-filter-status" onchange="renderList()">
+        <option value="">כל הסטטוסים</option>
+        <option value="sent">נשלח</option>
+        <option value="paid">שולם</option>
+        <option value="pending">ממתין</option>
+      </select>
+    </div>
     <div class="card">
-      <div class="card-title">הבקשות שלי</div>
-      <div id="customers-list"></div>
+      <div id="customers-list"><div class="empty"><div class="empty-icon">⏳</div>טוען...</div></div>
     </div>
   </div>
 
-  <!-- my report -->
+  <!-- REPORT -->
   <div class="pane" id="pane-report">
+    <div class="filter-row" id="report-filter-row">
+      <select id="report-filter-user" onchange="renderReport()" style="display:none">
+        <option value="">כל המשתמשים</option>
+      </select>
+    </div>
     <div class="stat-grid">
       <div class="stat-card"><div class="stat-label">סה"כ שולם</div><div class="stat-val" id="r-total">₪0</div><div class="stat-sub" id="r-count">0 עסקאות</div></div>
-      <div class="stat-card"><div class="stat-label">ממתינים</div><div class="stat-val" id="r-pending">0</div><div class="stat-sub" id="r-psum">₪0</div></div>
+      <div class="stat-card"><div class="stat-label">ממתינים</div><div class="stat-val" id="r-pending">0</div><div class="stat-sub" id="r-pending-sum">₪0</div></div>
     </div>
-    <div class="card"><div class="card-title">שיטות תשלום</div><div id="r-chart"></div></div>
-    <div class="card"><div class="card-title">עסקאות</div><div id="r-txn"></div></div>
+    <div class="card"><div class="card-title">שיטות תשלום</div><div id="methods-chart"></div></div>
+    <div class="card"><div class="card-title">עסקאות שהושלמו</div><div id="txn-list"></div></div>
   </div>
 
-  <!-- super report -->
-  <div class="pane" id="pane-super">
-    <div class="stat-grid">
-      <div class="stat-card"><div class="stat-label">סה"כ כולל</div><div class="stat-val" id="sr-total">₪0</div><div class="stat-sub" id="sr-count">0 עסקאות</div></div>
-      <div class="stat-card"><div class="stat-label">ממתינים (כולל)</div><div class="stat-val" id="sr-pending">0</div><div class="stat-sub" id="sr-psum">₪0</div></div>
-    </div>
-    <div class="card">
-      <div class="card-title">סינון</div>
-      <div class="filter-row">
-        <select id="sr-fu" onchange="renderSuperReport()"><option value="">כל המשתמשים</option></select>
-        <select id="sr-fs" onchange="renderSuperReport()">
-          <option value="">כל הסטטוסים</option>
-          <option value="paid">שולם</option>
-          <option value="sent">נשלח</option>
-          <option value="pending">ממתין</option>
-        </select>
-      </div>
-    </div>
-    <div class="card"><div class="card-title">שיטות תשלום — כולל</div><div id="sr-chart"></div></div>
-    <div class="card"><div class="card-title">כל העסקאות</div><div id="sr-txn"></div></div>
-  </div>
-
-  <!-- users management -->
+  <!-- USERS (superadmin only) -->
   <div class="pane" id="pane-users">
     <div class="card">
-      <div class="card-title">הוסף משתמש</div>
-      <label>שם משתמש *</label>
-      <input type="text" id="nu-un" placeholder="john" dir="ltr">
-      <label>שם תצוגה *</label>
-      <input type="text" id="nu-dn" placeholder="יוחנן כהן">
-      <label>סיסמה *</label>
-      <input type="password" id="nu-pw" placeholder="••••••" dir="ltr">
+      <div class="card-title">הוסף משתמש חדש</div>
+      <label>אימייל</label>
+      <input type="email" id="nu-email" placeholder="user@example.com" dir="ltr">
+      <label>סיסמה</label>
+      <input type="password" id="nu-pass" placeholder="לפחות 6 תווים" dir="ltr">
+      <label>שם תצוגה</label>
+      <input type="text" id="nu-name" placeholder="שם מלא">
       <label>תפקיד</label>
       <select id="nu-role">
         <option value="user">משתמש רגיל</option>
-        <option value="super">הנהלת חשבונות (על)</option>
+        <option value="admin">מנהל על</option>
       </select>
       <button class="btn btn-primary" onclick="addUser()">➕ הוסף משתמש</button>
     </div>
-    <div class="card"><div class="card-title">משתמשים קיימים</div><div id="users-list"></div></div>
+    <div class="card">
+      <div class="card-title">משתמשים קיימים</div>
+      <div id="users-list"><div class="empty"><div class="empty-icon">⏳</div>טוען...</div></div>
+    </div>
   </div>
 
-  <!-- config -->
+  <!-- CONFIG -->
   <div class="pane" id="pane-config">
-    <div class="config-note">ההגדרות נשמרות בדפדפן זה ומשותפות לכל המשתמשים שנכנסים מאותו מכשיר.</div>
+    <div class="config-note">ההגדרות נשמרות ב-Firestore ומשותפות לכל המשתמשים.</div>
     <div class="card">
       <div class="card-title">Make.com Webhook</div>
       <label>כתובת Webhook</label>
-      <input type="url" id="cfg-wh" placeholder="https://hook.eu2.make.com/..." dir="ltr">
+      <input type="url" id="cfg-webhook" placeholder="https://hook.eu2.make.com/..." dir="ltr">
     </div>
     <div class="card">
       <div class="card-title">Bit ו-PayBox</div>
-      <label>מספר Bit (עסקי)</label><input type="tel" id="cfg-bit" placeholder="0501234567" dir="ltr">
-      <label>מספר PayBox (עסקי)</label><input type="tel" id="cfg-pb" placeholder="0501234567" dir="ltr">
-      <label>שם העסק</label><input type="text" id="cfg-biz" placeholder="שם העסק">
-      <label>כתובת pay.html</label><input type="url" id="cfg-url" placeholder="https://username.github.io/paylink/pay.html" dir="ltr">
+      <label>מספר טלפון Bit (עסקי)</label>
+      <input type="tel" id="cfg-bit" placeholder="0501234567" dir="ltr">
+      <label>מספר טלפון PayBox (עסקי)</label>
+      <input type="tel" id="cfg-paybox" placeholder="0501234567" dir="ltr">
+      <label>שם העסק</label>
+      <input type="text" id="cfg-bizname" placeholder="המרפאה / הקליניקה שלי">
+      <label>כתובת URL של pay.html</label>
+      <input type="url" id="cfg-payurl" placeholder="https://username.github.io/paylink/pay.html" dir="ltr">
     </div>
     <div class="card">
       <div class="card-title">העברה בנקאית</div>
-      <label>שם בנק</label><input type="text" id="cfg-bn" placeholder="לאומי / הפועלים...">
-      <label>מספר חשבון</label><input type="text" id="cfg-ba" placeholder="12-345-678901" dir="ltr">
-      <label>שם בעל החשבון</label><input type="text" id="cfg-bo" placeholder="שם מלא">
+      <label>שם בנק</label>
+      <input type="text" id="cfg-bank-name" placeholder="לאומי / הפועלים...">
+      <label>מספר חשבון</label>
+      <input type="text" id="cfg-bank-account" placeholder="12-345-678901" dir="ltr">
+      <label>שם בעל החשבון</label>
+      <input type="text" id="cfg-bank-owner" placeholder="שם מלא">
     </div>
     <button class="btn btn-primary" onclick="saveConfig()">💾 שמור הגדרות</button>
   </div>
@@ -372,295 +347,364 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
-const K = { data:'paylink_data', cfg:'paylink_config', users:'paylink_users', sess:'paylink_session' };
-const ld = k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
-const sv = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, orderBy, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const getData  = () => ld(K.data)  || [];
-const getCfg   = () => ld(K.cfg)   || {};
-const getSess  = () => ld(K.sess);
-const getUsers = () => {
-  const u = ld(K.users);
-  return (u && u.length) ? u : [{ username:'admin', password:'admin123', display:'מנהל מערכת', role:'super' }];
+const firebaseConfig = {
+  apiKey: "AIzaSyB4KTikQJ8CH75Q7GTxd_LhEjzepWYywlo",
+  authDomain: "paylink-695ef.firebaseapp.com",
+  projectId: "paylink-695ef",
+  storageBucket: "paylink-695ef.firebasestorage.app",
+  messagingSenderId: "493989269113",
+  appId: "1:493989269113:web:a5217dfec418f9860bcea8"
 };
 
-const M = {
-  bit:    { label:'Bit',           icon:'🔵', color:'#0057b8', bg:'#e8f3ff' },
-  paybox: { label:'PayBox',        icon:'🟠', color:'#e67e22', bg:'#fef3e8' },
-  bank:   { label:'העברה בנקאית', icon:'🏦', color:'#2d6a4f', bg:'#e8f5ee' }
-};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-function initials(n) { return n.trim().split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
-function genToken() { return Math.random().toString(36).slice(2,10)+Date.now().toString(36); }
-function pill(s) {
-  if(s==='paid') return '<span class="pill pill-paid">שולם ✓</span>';
-  if(s==='sent') return '<span class="pill pill-sent">נשלח</span>';
-  return '<span class="pill pill-pending">ממתין</span>';
-}
-function toast(msg) {
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
-}
+// ── State ──────────────────────────────────────────────
+let currentUser = null;   // Firebase auth user
+let currentProfile = null; // Firestore user profile {name, role}
+let allRequests = [];      // cached requests
+let allProfiles = {};      // uid -> profile (admin only)
+let unsubRequests = null;
 
-// ── AUTH ──
-function doLogin() {
-  const un = document.getElementById('l-username').value.trim().toLowerCase();
-  const pw = document.getElementById('l-password').value;
-  const user = getUsers().find(u => u.username.toLowerCase()===un && u.password===pw);
-  if (!user) { document.getElementById('login-error').style.display='block'; return; }
-  document.getElementById('login-error').style.display='none';
-  sv(K.sess, { username:user.username, display:user.display, role:user.role });
-  showApp(user);
-}
-function doLogout() {
-  localStorage.removeItem(K.sess);
-  document.getElementById('app-screen').style.display='none';
-  document.getElementById('login-screen').style.display='flex';
-  document.getElementById('l-username').value='';
-  document.getElementById('l-password').value='';
-}
-['l-username','l-password'].forEach(id =>
-  document.getElementById(id).addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); })
-);
-
-// ── BUILD APP ──
-function showApp(user) {
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('app-screen').style.display='block';
-  document.getElementById('header-user').textContent='שלום, '+user.display;
-  document.getElementById('super-badge').style.display = user.role==='super' ? 'inline' : 'none';
-  buildTabs(user.role);
-  switchTab('send');
-}
-
-function buildTabs(role) {
-  const tabs = [
-    { id:'send',   label:'שליחה חדשה' },
-    { id:'list',   label:'הבקשות שלי' },
-    { id:'report', label:'הדוח שלי'   },
-    ...(role==='super' ? [
-      { id:'super',  label:'★ דוח כולל', cls:'super-tab' },
-      { id:'users',  label:'משתמשים',    cls:'super-tab' },
-      { id:'config', label:'הגדרות',     cls:'super-tab' },
-    ] : [])
-  ];
-  document.getElementById('main-tabs').innerHTML = tabs.map(t =>
-    `<button class="tab ${t.cls||''}" onclick="switchTab('${t.id}',this)">${t.label}</button>`
-  ).join('');
-}
-
-function switchTab(id, el) {
-  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  const pane = document.getElementById('pane-'+id);
-  if (pane) pane.classList.add('active');
-  if (el) { el.classList.add('active'); }
-  else {
-    document.querySelectorAll('.tab').forEach(t => {
-      if (t.getAttribute('onclick') && t.getAttribute('onclick').includes("'"+id+"'")) t.classList.add('active');
-    });
+// ── Auth ───────────────────────────────────────────────
+window.doLogin = async function() {
+  const email = document.getElementById('l-email').value.trim();
+  const pass  = document.getElementById('l-pass').value;
+  const btn   = document.getElementById('login-btn');
+  const err   = document.getElementById('login-error');
+  err.textContent = '';
+  if (!email || !pass) { err.textContent = 'נא למלא אימייל וסיסמה'; return; }
+  btn.disabled = true;
+  btn.innerHTML = 'מתחבר... <span class="spinner"></span>';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    err.textContent = e.code === 'auth/invalid-credential' ? 'אימייל או סיסמה שגויים' : 'שגיאת חיבור, נסה שוב';
+    btn.disabled = false;
+    btn.textContent = 'כניסה';
   }
-  if (id==='list')   renderList();
-  if (id==='report') renderMyReport();
-  if (id==='super')  renderSuperReport();
-  if (id==='users')  renderUsers();
-  if (id==='config') fillCfg();
+};
+
+window.doLogout = async function() {
+  if (unsubRequests) { unsubRequests(); unsubRequests = null; }
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    currentUser = user;
+    // load profile from Firestore
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    if (snap.exists()) {
+      currentProfile = snap.data();
+    } else {
+      // First-time superadmin bootstrap: if no users doc, create one
+      currentProfile = { name: user.email, role: 'admin' };
+      await setDoc(doc(db, 'users', user.uid), currentProfile);
+    }
+    showApp();
+  } else {
+    currentUser = null;
+    currentProfile = null;
+    showLogin();
+  }
+});
+
+function showLogin() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app-screen').style.display = 'none';
+  document.getElementById('login-btn').disabled = false;
+  document.getElementById('login-btn').textContent = 'כניסה';
+  document.getElementById('login-error').textContent = '';
 }
 
-// ── SEND ──
-async function sendRequest() {
+async function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-screen').style.display = 'block';
+  document.getElementById('user-badge').textContent = currentProfile.name || currentUser.email;
+
+  const isAdmin = currentProfile.role === 'admin';
+  // show/hide admin-only tabs
+  document.querySelectorAll('.tab-admin').forEach(t => t.style.display = isAdmin ? '' : 'none');
+  // show user filter for admin
+  document.getElementById('list-filter-user').style.display = isAdmin ? '' : 'none';
+  document.getElementById('report-filter-user').style.display = isAdmin ? '' : 'none';
+
+  if (isAdmin) await loadAllProfiles();
+  loadConfig();
+  subscribeRequests();
+}
+
+// ── Requests (Firestore real-time) ─────────────────────
+function subscribeRequests() {
+  if (unsubRequests) unsubRequests();
+  const isAdmin = currentProfile.role === 'admin';
+  let q;
+  if (isAdmin) {
+    q = query(collection(db, 'requests'), orderBy('ts', 'desc'));
+  } else {
+    q = query(collection(db, 'requests'), where('userId', '==', currentUser.uid), orderBy('ts', 'desc'));
+  }
+  unsubRequests = onSnapshot(q, snap => {
+    allRequests = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    // refresh active pane
+    const activeTab = document.querySelector('.tab.active');
+    if (activeTab) {
+      const pane = document.querySelector('.pane.active');
+      if (pane && pane.id === 'pane-list') renderList();
+      if (pane && pane.id === 'pane-report') renderReport();
+    }
+  });
+}
+
+// ── Send Request ───────────────────────────────────────
+window.sendRequest = async function() {
   const name   = document.getElementById('f-name').value.trim();
   const phone  = document.getElementById('f-phone').value.trim().replace(/[-\s]/g,'');
   const email  = document.getElementById('f-email').value.trim();
   const desc   = document.getElementById('f-desc').value.trim();
   const amount = parseFloat(document.getElementById('f-amount').value);
   const note   = document.getElementById('f-note').value.trim();
-  if (!name||!phone||!desc||!amount||amount<=0) { toast('⚠️ נא למלא שם, טלפון, תיאור וסכום'); return; }
-  const cfg = getCfg();
-  if (!cfg.payurl) { toast('⚠️ חסרה כתובת pay.html בהגדרות'); return; }
-  const sess  = getSess();
-  const token = genToken();
-  const payUrl = cfg.payurl+'?token='+token;
-  const rec = { id:token, name, phone, email, desc, amount, note, status:'sent', method:null,
-    userId:sess.username, userDisplay:sess.display,
-    date:new Date().toLocaleDateString('he-IL'), ts:Date.now() };
-  const data = getData(); data.unshift(rec); sv(K.data, data);
 
-  const anchor = document.getElementById('preview-anchor');
-  anchor.href=payUrl; anchor.textContent=payUrl;
-  document.getElementById('preview-link').style.display='block';
+  if (!name || !phone || !desc || !amount || amount <= 0) { showToast('⚠️ נא למלא שם, טלפון, תיאור וסכום'); return; }
 
-  if (cfg.webhook) {
-    try {
-      await fetch(cfg.webhook, { method:'POST', headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({ token,name,phone,email,desc,amount,note,payUrl,
-          userId:sess.username,userDisplay:sess.display,
-          bit:cfg.bit,paybox:cfg.paybox,bizname:cfg.bizname,
-          bankName:cfg.bankName,bankAccount:cfg.bankAccount,bankOwner:cfg.bankOwner }) });
-    } catch(e) { console.warn('Webhook error',e); }
+  const cfg = await loadConfigData();
+  if (!cfg.payurl) { showToast('⚠️ חסרה כתובת pay.html בהגדרות'); return; }
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  btn.innerHTML = 'שולח... <span class="spinner"></span>';
+
+  try {
+    const docRef = await addDoc(collection(db, 'requests'), {
+      name, phone, email, desc, amount, note,
+      status: 'sent', method: null,
+      userId: currentUser.uid,
+      userName: currentProfile.name || currentUser.email,
+      date: new Date().toLocaleDateString('he-IL'),
+      ts: serverTimestamp()
+    });
+    const token = docRef.id;
+    const payUrl = cfg.payurl + '?token=' + token;
+
+    // update doc with token + payUrl
+    await updateDoc(doc(db, 'requests', token), { token, payUrl });
+
+    // show preview
+    const anchor = document.getElementById('preview-anchor');
+    anchor.href = payUrl;
+    anchor.textContent = payUrl;
+    document.getElementById('preview-link').style.display = 'block';
+
+    // webhook to Make.com (SMS)
+    if (cfg.webhook) {
+      fetch(cfg.webhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, email, desc, amount, note, payUrl, token,
+          bit: cfg.bit, paybox: cfg.paybox, bizname: cfg.bizname,
+          bankName: cfg.bankName, bankAccount: cfg.bankAccount, bankOwner: cfg.bankOwner })
+      }).catch(() => {});
+    }
+
+    showToast('✓ בקשת תשלום נשלחה ל-' + phone);
+    ['f-name','f-phone','f-email','f-desc','f-amount','f-note'].forEach(id => document.getElementById(id).value = '');
+  } catch(e) {
+    showToast('שגיאה: ' + e.message);
   }
-  toast('✓ בקשה נשלחה ל-'+phone);
-  ['f-name','f-phone','f-email','f-desc','f-amount','f-note'].forEach(id=>document.getElementById(id).value='');
-}
+  btn.disabled = false;
+  btn.textContent = '📤 שלח בקשת תשלום';
+};
 
-// ── MY LIST ──
-function renderList() {
-  const sess = getSess();
-  const data = getData().filter(c=>c.userId===sess.username);
+// ── List ───────────────────────────────────────────────
+window.renderList = function() {
+  const statusFilter = document.getElementById('list-filter-status').value;
+  const userFilter   = document.getElementById('list-filter-user').value;
+  let data = [...allRequests];
+  if (statusFilter) data = data.filter(c => c.status === statusFilter);
+  if (userFilter)   data = data.filter(c => c.userId === userFilter);
+
   const el = document.getElementById('customers-list');
-  if (!data.length) { el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>עדיין אין בקשות</div>'; return; }
-  el.innerHTML = data.map(c=>`
+  if (!data.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">📋</div>אין רשומות</div>'; return; }
+  el.innerHTML = data.map(c => `
     <div class="customer-item">
-      <div class="avatar">${initials(c.name)}</div>
+      <div class="avatar">${getInitials(c.name)}</div>
       <div class="cust-info">
         <div class="cust-name">${c.name}</div>
-        <div class="cust-sub">${c.phone} · ${c.desc}</div>
+        <div class="cust-sub">${c.phone} · ${c.desc}${currentProfile.role==='admin'?' · <em>'+c.userName+'</em>':''}</div>
       </div>
       <div class="cust-right">
         <div class="cust-amount">₪${Number(c.amount).toLocaleString()}</div>
-        ${pill(c.status)}
+        ${statusPill(c.status)}
       </div>
     </div>`).join('');
-}
+};
 
-// ── REPORT ENGINE ──
-function renderReport(data, ids, showUser) {
-  const paid    = data.filter(c=>c.status==='paid');
-  const pending = data.filter(c=>c.status!=='paid');
-  const total   = paid.reduce((s,c)=>s+Number(c.amount),0);
-  const psum    = pending.reduce((s,c)=>s+Number(c.amount),0);
-  document.getElementById(ids.total).textContent   = '₪'+total.toLocaleString();
-  document.getElementById(ids.count).textContent   = paid.length+' עסקאות';
-  document.getElementById(ids.pend).textContent    = pending.length;
-  document.getElementById(ids.psum).textContent    = '₪'+psum.toLocaleString();
+// ── Report ─────────────────────────────────────────────
+window.renderReport = function() {
+  const userFilter = document.getElementById('report-filter-user').value;
+  let data = [...allRequests];
+  if (userFilter) data = data.filter(c => c.userId === userFilter);
+
+  const paid    = data.filter(c => c.status === 'paid');
+  const pending = data.filter(c => c.status !== 'paid');
+  const total   = paid.reduce((s,c) => s + Number(c.amount), 0);
+  const pendingSum = pending.reduce((s,c) => s + Number(c.amount), 0);
+
+  document.getElementById('r-total').textContent = '₪' + total.toLocaleString();
+  document.getElementById('r-count').textContent = paid.length + ' עסקאות';
+  document.getElementById('r-pending').textContent = pending.length;
+  document.getElementById('r-pending-sum').textContent = '₪' + pendingSum.toLocaleString();
+
+  const METHODS = { bit:{label:'Bit',icon:'🔵',color:'#0057b8'}, paybox:{label:'PayBox',icon:'🟠',color:'#e67e22'}, bank:{label:'העברה בנקאית',icon:'🏦',color:'#2d6a4f'} };
   const amounts = {bit:0,paybox:0,bank:0};
-  paid.forEach(c=>{ if(c.method&&amounts[c.method]!==undefined) amounts[c.method]+=Number(c.amount); });
-  const chartEl = document.getElementById(ids.chart);
-  chartEl.innerHTML = paid.length ? Object.entries(M).map(([k,v])=>{
-    const pct = total>0?Math.round(amounts[k]/total*100):0;
-    return `<div class="method-row">
-      <div class="method-top"><span>${v.icon} <strong>${v.label}</strong></span><span>₪${amounts[k].toLocaleString()} · ${pct}%</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${v.color}"></div></div>
-    </div>`;
-  }).join('') : '<div class="empty" style="padding:12px 0">אין נתונים</div>';
-  const txEl = document.getElementById(ids.txn);
-  const sorted = [...data].sort((a,b)=>b.ts-a.ts);
-  txEl.innerHTML = sorted.length ? sorted.map(c=>{
-    const mv = M[c.method]||{icon:'⏳',bg:'#f4f3ef'};
-    return `<div class="txn-item">
-      <div class="txn-icon" style="background:${mv.bg}">${mv.icon}</div>
-      <div class="txn-info">
-        <div class="txn-name">${c.name}</div>
-        <div class="txn-meta">${c.desc}${showUser?' · <strong>'+(c.userDisplay||c.userId)+'</strong>':''} · ${c.date}</div>
-      </div>
-      <div style="text-align:left;flex-shrink:0">
+  paid.forEach(c => { if(c.method && amounts[c.method]!==undefined) amounts[c.method]+=Number(c.amount); });
+  const chartEl = document.getElementById('methods-chart');
+  chartEl.innerHTML = !paid.length ? '<div class="empty" style="padding:8px 0">אין נתונים</div>' :
+    Object.entries(METHODS).map(([k,v]) => {
+      const pct = total>0 ? Math.round(amounts[k]/total*100) : 0;
+      return `<div class="method-row"><div class="method-top"><span>${v.icon} <strong>${v.label}</strong></span><span>₪${amounts[k].toLocaleString()} · ${pct}%</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${v.color}"></div></div></div>`;
+    }).join('');
+
+  const MCOLORS = {bit:'#e8f3ff',paybox:'#fef3e8',bank:'#e8f5ee'};
+  const MLABELS = {bit:'Bit',paybox:'PayBox',bank:'העברה בנקאית'};
+  const txEl = document.getElementById('txn-list');
+  txEl.innerHTML = !paid.length ? '<div class="empty">אין עסקאות</div>' :
+    paid.map(c => `
+      <div class="txn-item">
+        <div class="txn-icon" style="background:${MCOLORS[c.method]||'#f4f3ef'}">${METHODS[c.method]?.icon||'💳'}</div>
+        <div class="txn-info">
+          <div class="txn-name">${c.name}</div>
+          <div class="txn-detail">${MLABELS[c.method]||''} · ${c.date}${currentProfile.role==='admin'?' · '+c.userName:''}</div>
+        </div>
         <div class="txn-amount">₪${Number(c.amount).toLocaleString()}</div>
-        ${pill(c.status)}
+      </div>`).join('');
+};
+
+// ── Users (admin) ──────────────────────────────────────
+async function loadAllProfiles() {
+  const snap = await getDocs(collection(db, 'users'));
+  snap.docs.forEach(d => { allProfiles[d.id] = d.data(); });
+  // populate user filter dropdowns
+  ['list-filter-user','report-filter-user'].forEach(id => {
+    const sel = document.getElementById(id);
+    // keep first option
+    while (sel.options.length > 1) sel.remove(1);
+    Object.entries(allProfiles).forEach(([uid, p]) => {
+      const opt = document.createElement('option');
+      opt.value = uid; opt.textContent = p.name || p.email || uid;
+      sel.appendChild(opt);
+    });
+  });
+  renderUsersList();
+}
+
+function renderUsersList() {
+  const el = document.getElementById('users-list');
+  const entries = Object.entries(allProfiles);
+  if (!entries.length) { el.innerHTML = '<div class="empty">אין משתמשים</div>'; return; }
+  el.innerHTML = entries.map(([uid, p]) => `
+    <div class="user-item">
+      <div class="avatar" style="font-size:11px">${getInitials(p.name||p.email||'?')}</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:500">${p.name||''}</div>
+        <div style="font-size:11px;color:var(--muted)">${p.email||uid}</div>
       </div>
-    </div>`;
-  }).join('') : '<div class="empty" style="padding:12px 0">אין עסקאות</div>';
-}
-
-function renderMyReport() {
-  const sess = getSess();
-  const data = getData().filter(c=>c.userId===sess.username);
-  renderReport(data, {total:'r-total',count:'r-count',pend:'r-pending',psum:'r-psum',chart:'r-chart',txn:'r-txn'}, false);
-}
-
-function renderSuperReport() {
-  let data = getData();
-  const users = getUsers().filter(u=>u.role!=='super');
-  const fuEl = document.getElementById('sr-fu');
-  const saved = fuEl.value;
-  fuEl.innerHTML = '<option value="">כל המשתמשים</option>' +
-    users.map(u=>`<option value="${u.username}" ${u.username===saved?'selected':''}>${u.display}</option>`).join('');
-  const fu = document.getElementById('sr-fu').value;
-  const fs = document.getElementById('sr-fs').value;
-  if (fu) data = data.filter(c=>c.userId===fu);
-  if (fs) data = data.filter(c=>c.status===fs);
-  renderReport(data, {total:'sr-total',count:'sr-count',pend:'sr-pending',psum:'sr-psum',chart:'sr-chart',txn:'sr-txn'}, true);
-}
-
-// ── USERS ──
-function addUser() {
-  const un = document.getElementById('nu-un').value.trim().toLowerCase();
-  const dn = document.getElementById('nu-dn').value.trim();
-  const pw = document.getElementById('nu-pw').value;
-  const role = document.getElementById('nu-role').value;
-  if (!un||!dn||!pw) { toast('⚠️ נא למלא את כל השדות'); return; }
-  const users = getUsers();
-  if (users.find(u=>u.username===un)) { toast('⚠️ שם משתמש כבר קיים'); return; }
-  users.push({username:un,display:dn,password:pw,role});
-  sv(K.users,users);
-  ['nu-un','nu-dn','nu-pw'].forEach(id=>document.getElementById(id).value='');
-  toast('✓ משתמש נוסף: '+dn);
-  renderUsers();
-}
-function removeUser(un) {
-  const sess = getSess();
-  if (un===sess.username) { toast('⚠️ לא ניתן למחוק את המשתמש הנוכחי'); return; }
-  sv(K.users, getUsers().filter(u=>u.username!==un));
-  toast('משתמש הוסר'); renderUsers();
-}
-function renderUsers() {
-  document.getElementById('users-list').innerHTML = getUsers().map(u=>`
-    <div class="user-row">
-      <div class="user-avatar">${initials(u.display)}</div>
-      <div class="user-info">
-        <div class="user-name-text">${u.display}</div>
-        <div class="user-role-text">${u.username} · ${u.role==='super'?'★ הנהלת חשבונות':'משתמש רגיל'}</div>
-      </div>
-      <button class="btn-sm" onclick="removeUser('${u.username}')">הסר</button>
+      <span class="user-role ${p.role==='admin'?'role-admin':'role-user'}">${p.role==='admin'?'מנהל על':'משתמש'}</span>
     </div>`).join('');
 }
 
-// ── CONFIG ──
-function fillCfg() {
-  const c = getCfg();
-  document.getElementById('cfg-wh').value  = c.webhook     ||'';
-  document.getElementById('cfg-bit').value = c.bit         ||'';
-  document.getElementById('cfg-pb').value  = c.paybox      ||'';
-  document.getElementById('cfg-biz').value = c.bizname     ||'';
-  document.getElementById('cfg-url').value = c.payurl      ||'';
-  document.getElementById('cfg-bn').value  = c.bankName    ||'';
-  document.getElementById('cfg-ba').value  = c.bankAccount ||'';
-  document.getElementById('cfg-bo').value  = c.bankOwner   ||'';
-}
-function saveConfig() {
-  sv(K.cfg, {
-    webhook:     document.getElementById('cfg-wh').value.trim(),
-    bit:         document.getElementById('cfg-bit').value.trim(),
-    paybox:      document.getElementById('cfg-pb').value.trim(),
-    bizname:     document.getElementById('cfg-biz').value.trim(),
-    payurl:      document.getElementById('cfg-url').value.trim(),
-    bankName:    document.getElementById('cfg-bn').value.trim(),
-    bankAccount: document.getElementById('cfg-ba').value.trim(),
-    bankOwner:   document.getElementById('cfg-bo').value.trim(),
-  });
-  toast('✓ ההגדרות נשמרו');
-}
-
-// ── INIT ──
-(function() {
-  const sess = getSess();
-  if (sess) {
-    const user = getUsers().find(u=>u.username===sess.username);
-    if (user) { showApp(user); return; }
+window.addUser = async function() {
+  const email = document.getElementById('nu-email').value.trim();
+  const pass  = document.getElementById('nu-pass').value;
+  const name  = document.getElementById('nu-name').value.trim();
+  const role  = document.getElementById('nu-role').value;
+  if (!email || !pass || !name) { showToast('⚠️ נא למלא את כל השדות'); return; }
+  try {
+    // Create user in Firebase Auth (secondary app to avoid re-login)
+    const secondApp = initializeApp(firebaseConfig, 'secondary-' + Date.now());
+    const secondAuth = getAuth(secondApp);
+    const cred = await createUserWithEmailAndPassword(secondAuth, email, pass);
+    await signOut(secondAuth);
+    // Save profile
+    const profile = { name, email, role };
+    await setDoc(doc(db, 'users', cred.user.uid), profile);
+    allProfiles[cred.user.uid] = profile;
+    renderUsersList();
+    await loadAllProfiles();
+    ['nu-email','nu-pass','nu-name'].forEach(id => document.getElementById(id).value='');
+    showToast('✓ משתמש ' + name + ' נוסף בהצלחה');
+  } catch(e) {
+    showToast('שגיאה: ' + (e.code==='auth/email-already-in-use'?'האימייל כבר קיים':e.message));
   }
-  document.getElementById('login-screen').style.display='flex';
-})();
+};
 
-window.addEventListener('storage', e => {
-  if (e.key!==K.data) return;
-  const active = document.querySelector('.tab.active');
-  if (!active) return;
-  const oc = active.getAttribute('onclick')||'';
-  if (oc.includes('list'))   renderList();
-  if (oc.includes('report')) renderMyReport();
-  if (oc.includes('super'))  renderSuperReport();
-});
+// ── Config ─────────────────────────────────────────────
+async function loadConfigData() {
+  try {
+    const snap = await getDoc(doc(db, 'config', 'settings'));
+    return snap.exists() ? snap.data() : {};
+  } catch { return {}; }
+}
+
+async function loadConfig() {
+  const cfg = await loadConfigData();
+  document.getElementById('cfg-webhook').value     = cfg.webhook     || '';
+  document.getElementById('cfg-bit').value         = cfg.bit         || '';
+  document.getElementById('cfg-paybox').value      = cfg.paybox      || '';
+  document.getElementById('cfg-bizname').value     = cfg.bizname     || '';
+  document.getElementById('cfg-payurl').value      = cfg.payurl      || '';
+  document.getElementById('cfg-bank-name').value   = cfg.bankName    || '';
+  document.getElementById('cfg-bank-account').value= cfg.bankAccount || '';
+  document.getElementById('cfg-bank-owner').value  = cfg.bankOwner   || '';
+}
+
+window.saveConfig = async function() {
+  const cfg = {
+    webhook:     document.getElementById('cfg-webhook').value.trim(),
+    bit:         document.getElementById('cfg-bit').value.trim(),
+    paybox:      document.getElementById('cfg-paybox').value.trim(),
+    bizname:     document.getElementById('cfg-bizname').value.trim(),
+    payurl:      document.getElementById('cfg-payurl').value.trim(),
+    bankName:    document.getElementById('cfg-bank-name').value.trim(),
+    bankAccount: document.getElementById('cfg-bank-account').value.trim(),
+    bankOwner:   document.getElementById('cfg-bank-owner').value.trim(),
+  };
+  await setDoc(doc(db, 'config', 'settings'), cfg);
+  showToast('✓ ההגדרות נשמרו');
+};
+
+// ── Tab switching ──────────────────────────────────────
+window.switchTab = function(id, el) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('pane-' + id).classList.add('active');
+  el.classList.add('active');
+  if (id === 'list')   renderList();
+  if (id === 'report') renderReport();
+  if (id === 'users')  renderUsersList();
+  if (id === 'config') loadConfig();
+};
+
+// ── Helpers ────────────────────────────────────────────
+function getInitials(name) { return (name||'?').trim().split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+function statusPill(s) {
+  if (s==='paid')    return '<span class="pill pill-paid">שולם ✓</span>';
+  if (s==='sent')    return '<span class="pill pill-sent">נשלח</span>';
+  return '<span class="pill pill-pending">ממתין</span>';
+}
+window.showToast = function(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+};
 </script>
 </body>
 </html>
